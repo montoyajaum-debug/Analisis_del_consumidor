@@ -11,11 +11,8 @@ Fuente: Archivo customer_shopping_behavior.csv con $3,900$ registros y $18$ vari
 🛠️ Herramientas y Tecnologías (Tools)
 
 Python: Pandas, NumPy, SQLAlchemy y Psycopg2 para la ingesta, limpieza, imputación de nulos y transformación de datos.
-
 Base de Datos / SQL: PostgreSQL para el almacenamiento relacional y la ejecución de consultas analíticas avanzadas.
-
 Visualización: Power BI para la construcción de un panel (dashboard) interactivo de negocio.
-
 Reportes y Presentación: Creación de informes ejecutivos y diseño de una presentación interactiva utilizando Gamma.
 
 👣 Pasos del Proyecto (Steps)
