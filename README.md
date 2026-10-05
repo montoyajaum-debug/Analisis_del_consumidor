@@ -10,9 +10,10 @@
 
 **Recomendación:** no basar campañas segmentadas en estos datos. Validar primero el origen y el proceso de captura, y medir con un experimento controlado antes de invertir.
 
-<!-- [COMPLETAR: subir la captura del dashboard a images/dashboard.png y descomentar la línea siguiente]
-![Dashboard](images/dashboard.png)
--->
+![Resumen visual de hallazgos](images/hallazgos.png)
+*Resumen visual generado con Python a partir de los datos del repositorio.*
+
+<!-- Pendiente: agregar captura del dashboard de Power BI en images/dashboard.png -->
 
 ## Contexto y preguntas de negocio
 
@@ -22,7 +23,7 @@ El análisis parte de 10 preguntas de negocio sobre ingresos, descuentos, suscri
 
 | Aspecto | Detalle |
 |---|---|
-| Fuente | `customer_shopping_behavior.csv` [COMPLETAR: origen del dataset y enlace] |
+| Fuente | [Customer Shopping Trends Dataset](https://www.kaggle.com/datasets/iamsouravbanerjee/customer-shopping-trends-dataset) (Kaggle). Según su descripción, es un **dataset sintético** creado para practicar análisis de datos |
 | Tamaño | 3.900 transacciones, 18 variables |
 | Granularidad | Una fila por cliente/transacción |
 | Calidad | 37 valores nulos en `review_rating`, imputados con la mediana por categoría. `promo_code_used` era idéntica a `discount_applied` y se eliminó |
@@ -41,7 +42,7 @@ El análisis parte de 10 preguntas de negocio sobre ingresos, descuentos, suscri
 3. **El descuento no cambia el gasto.** Ticket de 59,28 USD con descuento vs. 60,13 USD sin descuento.
 4. **La recurrencia no se asocia a la suscripción.** Entre los clientes con más de 5 compras previas, el 27,6 % está suscrito, casi igual al 27,0 % del total.
 5. **Ropa concentra el 44,7 % de los ingresos**, seguida de Accesorios (31,8 %), Calzado (15,5 %) y Abrigos (7,9 %). Es la única diferencia relevante, y se explica por volumen de compras, no por ticket.
-6. **El dataset tiene artefactos:** todos los suscriptores son hombres, todos recibieron descuento, ninguna mujer tiene suscripción ni descuento, y los montos se distribuyen de forma casi uniforme entre 20 y 100 USD. Estos patrones indican datos generados o un error en la captura.
+6. **El dataset tiene artefactos:** todos los suscriptores son hombres, todos recibieron descuento, ninguna mujer tiene suscripción ni descuento, y los montos se distribuyen de forma casi uniforme entre 20 y 100 USD. Estos patrones son consistentes con lo que declara la fuente: el dataset es sintético.
 
 ## Recomendaciones
 
@@ -66,7 +67,7 @@ Además, la segmentación de Q7 dejaba al ~80 % de los clientes como "Loyal"; se
 
 ## Limitaciones
 
-- Los hallazgos describen este dataset, no un comportamiento de mercado real.
+- El dataset es sintético (así lo declara su autor en Kaggle): los hallazgos describen estos datos, no un comportamiento de mercado real.
 - No hay fechas de transacción, lo que impide analizar tendencias o estacionalidad real más allá de la variable `season`.
 - `age_group` se construyó por cuartiles, por lo que los grupos tienen el mismo tamaño por diseño y sus ingresos son comparables solo en ticket, no en volumen.
 
@@ -77,7 +78,7 @@ Además, la segmentación de Q7 dejaba al ~80 % de los clientes como "Loyal"; se
 ├── customer_shopping_behavior.ipynb    # limpieza y transformación (Python)
 ├── customer_behavior.sql               # 12 consultas de negocio y validación (PostgreSQL)
 ├── customer_behavior_dashboard.pbix    # dashboard (Power BI)
-└── images/                             # capturas
+└── images/hallazgos.png                # resumen visual de hallazgos
 ```
 
 ## Cómo reproducir
