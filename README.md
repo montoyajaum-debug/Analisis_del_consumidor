@@ -1,27 +1,95 @@
-📊 Proyecto de Análisis de Datos de Comportamiento del Cliente
+# Comportamiento del cliente en retail: por qué este dataset no sustenta decisiones comerciales
 
-🌟 Resumen (Overview)
+**Python · PostgreSQL · Power BI**
 
-Este proyecto de análisis de datos de extremo a extremo (end-to-end) evalúa el comportamiento de compra de los clientes utilizando técnicas avanzadas de análisis exploratorio, consultas relacionales en SQL y visualización de datos interactiva. El objetivo principal es extraer información clave sobre los patrones de gasto, el impacto de los descuentos y las preferencias de suscripción para optimizar las estrategias comerciales de la empresa.
+## Resumen ejecutivo
 
-📂 Conjunto de Datos (Dataset)
+**Problema:** una empresa de retail quiere saber si debe orientar sus campañas por género, suscripción o descuentos, a partir de 3.900 transacciones.
 
-Fuente: Archivo customer_shopping_behavior.csv con $3,900$ registros y $18$ variables originales.Descripción: Contiene información detallada sobre las transacciones de los clientes, demografía, montos de compra, valoraciones de reseñas, métodos de pago y estado de suscripción.Variables Clave:customer_id: Identificador único del cliente.age: Edad del comprador.gender: Género del cliente.item_purchased: Producto adquirido.category: Categoría del producto (ropa, calzado, accesorios, etc.).purchase_amount: Monto pagado por la transacción (USD).review_rating: Calificación otorgada por el cliente.subscription_status: Estado de suscripción (Sí/No).discount_applied: Indicador de si se aplicó un descuento (Sí/No).
+**Hallazgo principal:** el ticket promedio es prácticamente igual entre géneros, suscriptores, compras con descuento y tipos de envío (diferencias de 2 USD o menos sobre un ticket promedio de 59,76 USD), y el dataset presenta artefactos que no ocurren en datos reales: el 100 % de los suscriptores son hombres y el 100 % de ellos recibió descuento.
 
-🛠️ Herramientas y Tecnologías (Tools)
+**Recomendación:** no basar campañas segmentadas en estos datos. Validar primero el origen y el proceso de captura, y medir con un experimento controlado antes de invertir.
 
-Python: Pandas, NumPy, SQLAlchemy y Psycopg2 para la ingesta, limpieza, imputación de nulos y transformación de datos.
-Base de Datos / SQL: PostgreSQL para el almacenamiento relacional y la ejecución de consultas analíticas avanzadas.
-Visualización: Power BI para la construcción de un panel (dashboard) interactivo de negocio.
-Reportes y Presentación: Creación de informes ejecutivos y diseño de una presentación interactiva utilizando Gamma.
+<!-- [COMPLETAR: subir la captura del dashboard a images/dashboard.png y descomentar la línea siguiente]
+![Dashboard](images/dashboard.png)
+-->
 
-👣 Pasos del Proyecto (Steps)
+## Contexto y preguntas de negocio
 
-Carga y Análisis Exploratorio (EDA): Importación del conjunto de datos en Python, revisión de tipos de datos, estadísticas descriptivas y detección de valores nulos (específicamente $37$ valores faltantes en review_rating).Limpieza de Datos y Transformación:Imputación de los valores nulos en las valoraciones utilizando la mediana por categoría (df.groupby('category')['review_rating']).Normalización de nombres de columnas a minúsculas y reemplazo de espacios por guiones bajos.Detección y eliminación de columnas redundantes (como promo_code_used que era idéntica a discount_applied).Creación de nuevas características (Feature Engineering): rangos de edad (age_group) y frecuencia de compra en días (purchase_frequency_days).Consultas SQL Avanzadas: Ejecución de $10$ consultas de negocio en PostgreSQL para responder preguntas clave sobre ingresos, segmentación y rendimiento de productos.Dashboard y Reporte: Conexión de los datos limpios a Power BI para el diseño visual y desarrollo de diapositivas ejecutivas con Gamma.
+El análisis parte de 10 preguntas de negocio sobre ingresos, descuentos, suscripción, segmentación de clientes y productos. Al responderlas, las diferencias entre segmentos resultaron mínimas y aparecieron patrones imposibles en datos reales. Por eso el proyecto incluye una **validación de la calidad del dataset** antes de emitir recomendaciones: un análisis que lleva a una mala decisión es peor que ningún análisis.
 
-📈 Panel Interactivo (Dashboard)
+## Datos
 
-El panel desarrollado en Power BI (customer_shopping_behavior.pbix) incluye:KPIs Principales: Ingresos totales ($Total Revenue$), gasto promedio por cliente y número total de transacciones.Filtros Dinámicos: Segmentación por categoría de producto, género, estación y estado de suscripción.Visuales Clave: Gráficos de barras para los productos más vendidos, análisis de ingresos por grupo de edad y comportamiento de envíos.
+| Aspecto | Detalle |
+|---|---|
+| Fuente | `customer_shopping_behavior.csv` [COMPLETAR: origen del dataset y enlace] |
+| Tamaño | 3.900 transacciones, 18 variables |
+| Granularidad | Una fila por cliente/transacción |
+| Calidad | 37 valores nulos en `review_rating`, imputados con la mediana por categoría. `promo_code_used` era idéntica a `discount_applied` y se eliminó |
 
-📊 Resultados y Hallazgos (Results)A través de las consultas SQL y el análisis en Python, se obtuvieron las siguientes conclusiones clave:Q1 (Ingresos por Género): Se identificó la contribución económica exacta segmentada por género, mostrando diferencias notables en el volumen de compras.Q2 & Q6 (Descuentos): El análisis de los productos con mayor porcentaje de descuentos aplicados demostró cómo las promociones impactan el volumen de transacciones sin disminuir drásticamente el gasto promedio.Q5 (Suscripciones): Los clientes suscritos muestran patrones de retención y un nivel de gasto diferenciado en comparación con los no suscriptores.Q8 (Productos Top por Categoría): Mediante funciones de ventana (ROW_NUMBER() OVER(PARTITION BY category)), se determinaron los $3$ productos más vendidos dentro de cada categoría de negocio.Q10 (Grupos de Edad): El desglose por rangos etarios reveló qué segmento poblacional aporta el mayor volumen de ingresos a la compañía.🚀 Cómo Ejecutar el Proyecto (How to Run)Para replicar este proyecto en tu entorno local, sigue estos pasos:Clonar el repositorio:git clone https://github.com/tu-usuario/proyecto-analisis-datos.gitu
-Ejecutar el pipeline de Python:Abre el entorno de Google Colab o Jupyter Notebook.Ejecuta el script de limpieza con el archivo customer_shopping_behavior.csv.Configurar la Base de Datos:Crea una base de datos en PostgreSQL.Carga los datos limpios y ejecuta las consultas ubicadas en la sección de SQL (Q1 a Q10).Visualizar el Dashboard:Abre el archivo correspondiente en Power BI Desktop para interactuar con las métricas del negocio.
+## Enfoque
+
+1. **Limpieza y transformación (Python/pandas):** imputación de nulos, normalización de nombres de columnas, eliminación de la columna redundante, creación de `age_group` (cuartiles de edad) y `purchase_frequency_days`.
+2. **Carga en PostgreSQL** con SQLAlchemy y respuesta a 10 preguntas de negocio en SQL.
+3. **Validación de calidad:** consultas adicionales para detectar relaciones artificiales entre variables (Q11–Q12).
+4. **Dashboard en Power BI** con KPIs de ingresos, ticket promedio y transacciones, filtrable por categoría, género, estación y suscripción.
+
+## Hallazgos
+
+1. **El género no explica el gasto.** Los hombres generan el 67,7 % de los ingresos, pero solo porque son el 68 % de los clientes. El ticket promedio es casi igual: 59,54 USD (hombres) vs. 60,25 USD (mujeres).
+2. **La suscripción no aumenta el ticket.** Los suscriptores gastan 59,49 USD por compra frente a 59,87 USD de los no suscriptores.
+3. **El descuento no cambia el gasto.** Ticket de 59,28 USD con descuento vs. 60,13 USD sin descuento.
+4. **La recurrencia no se asocia a la suscripción.** Entre los clientes con más de 5 compras previas, el 27,6 % está suscrito, casi igual al 27,0 % del total.
+5. **Ropa concentra el 44,7 % de los ingresos**, seguida de Accesorios (31,8 %), Calzado (15,5 %) y Abrigos (7,9 %). Es la única diferencia relevante, y se explica por volumen de compras, no por ticket.
+6. **El dataset tiene artefactos:** todos los suscriptores son hombres, todos recibieron descuento, ninguna mujer tiene suscripción ni descuento, y los montos se distribuyen de forma casi uniforme entre 20 y 100 USD. Estos patrones indican datos generados o un error en la captura.
+
+## Recomendaciones
+
+| Recomendación | Basada en | Prioridad |
+|---|---|---|
+| No lanzar campañas segmentadas por género o suscripción con estos datos | Hallazgos 1, 2 y 6 | Alta |
+| Auditar el proceso de captura de suscripción y descuentos antes de reutilizar los datos | Hallazgo 6 | Alta |
+| Si se quiere medir el efecto del descuento, hacerlo con un experimento A/B y no con datos históricos | Hallazgo 3 | Media |
+| Priorizar inventario y visibilidad de Ropa y Accesorios, que suman el 76,5 % de los ingresos | Hallazgo 5 | Media |
+
+## Mejoras técnicas aplicadas al SQL
+
+En la revisión del código se corrigieron tres errores que no generaban error pero sí resultados incorrectos:
+
+| Consulta | Problema | Corrección |
+|---|---|---|
+| Q6 | División entera en PostgreSQL: 49,66 % se mostraba como 49 | `100.0` en lugar de `100` |
+| Q8 | `ROW_NUMBER` ordenaba arbitrariamente productos empatados (Blouse y Pants con 171 compras) | `RANK()` |
+| Q2 | `>=` incluía compras iguales al promedio cuando la pregunta pedía "más que" | `>` |
+
+Además, la segmentación de Q7 dejaba al ~80 % de los clientes como "Loyal"; se agregó una alternativa por terciles (Q7b).
+
+## Limitaciones
+
+- Los hallazgos describen este dataset, no un comportamiento de mercado real.
+- No hay fechas de transacción, lo que impide analizar tendencias o estacionalidad real más allá de la variable `season`.
+- `age_group` se construyó por cuartiles, por lo que los grupos tienen el mismo tamaño por diseño y sus ingresos son comparables solo en ticket, no en volumen.
+
+## Estructura del repositorio
+
+```
+├── customer_shopping_behavior.csv      # datos originales
+├── customer_shopping_behavior.ipynb    # limpieza y transformación (Python)
+├── customer_behavior.sql               # 12 consultas de negocio y validación (PostgreSQL)
+├── customer_behavior_dashboard.pbix    # dashboard (Power BI)
+└── images/                             # capturas
+```
+
+## Cómo reproducir
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/montoyajaum-debug/Analisis_del_consumidor.git
+   ```
+2. Ejecuta `customer_shopping_behavior.ipynb` (Jupyter o Google Colab) para limpiar los datos y cargarlos en PostgreSQL. Ajusta la cadena de conexión a tu base de datos.
+3. Ejecuta `customer_behavior.sql` en PostgreSQL.
+4. Abre `customer_behavior_dashboard.pbix` en Power BI Desktop.
+
+## Autor
+
+**Jhon Alexander Urrea Montoya** · [LinkedIn](https://www.linkedin.com/in/jhon-urrea-data) · montoyajaum@gmail.com
